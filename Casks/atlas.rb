@@ -2,7 +2,7 @@
 cask "atlas" do
   desc "Atlas deterministic code intelligence: symbols, calls, routes, impact, cross-repo."
   homepage "https://github.com/dominic097/atlas"
-  version "0.1.3"
+  version "0.1.4"
 
   livecheck do
     skip "Auto-generated on release."
@@ -12,27 +12,27 @@ cask "atlas" do
 
   on_macos do
     on_intel do
-      url "https://github.com/dominic097/atlas/releases/download/v0.1.3/atlas_0.1.3_darwin_amd64.tar.gz",
+      url "https://github.com/dominic097/atlas/releases/download/v0.1.4/atlas_0.1.4_darwin_amd64.tar.gz",
         verified: "github.com/dominic097/atlas/"
-      sha256 "61551d9e7e84d3585de496a09abe08a92a3b141919d0b958819058a41631b07a"
+      sha256 "7ae0804e048c2fc7a00086279098d69c77fb712dbbd7a9d4e2d7bfa8cda31229"
     end
     on_arm do
-      url "https://github.com/dominic097/atlas/releases/download/v0.1.3/atlas_0.1.3_darwin_arm64.tar.gz",
+      url "https://github.com/dominic097/atlas/releases/download/v0.1.4/atlas_0.1.4_darwin_arm64.tar.gz",
         verified: "github.com/dominic097/atlas/"
-      sha256 "7102fc57846618424e9d3034b37770b8ba0fd0f87ec848f0de468c0f3eb90aaa"
+      sha256 "e4e3aa1c12e0f4fe63d8147a2e80bcae8d88b06f1593514edffa0a2168065dbe"
     end
   end
 
   on_linux do
     on_intel do
-      url "https://github.com/dominic097/atlas/releases/download/v0.1.3/atlas_0.1.3_linux_amd64.tar.gz",
+      url "https://github.com/dominic097/atlas/releases/download/v0.1.4/atlas_0.1.4_linux_amd64.tar.gz",
         verified: "github.com/dominic097/atlas/"
-      sha256 "773ad21e2780623c855b551899d2a80062aa25f6d54de756e73d3d4db341fb1f"
+      sha256 "9c9e264168756d101b5203d66b69a0915d713764ba000d61361c70301c935b9e"
     end
     on_arm do
-      url "https://github.com/dominic097/atlas/releases/download/v0.1.3/atlas_0.1.3_linux_arm64.tar.gz",
+      url "https://github.com/dominic097/atlas/releases/download/v0.1.4/atlas_0.1.4_linux_arm64.tar.gz",
         verified: "github.com/dominic097/atlas/"
-      sha256 "e01b7a4dca8079a11b15531959ce4521cb7e69fa6b25c8f578226ab88053d814"
+      sha256 "1cfc6256cfb815b704532cc53501f2a8d8d7077039c1045b3e23053b8239946d"
     end
   end
 
