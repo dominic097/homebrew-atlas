@@ -2,7 +2,7 @@
 cask "atlas" do
   desc "Atlas deterministic code intelligence: symbols, calls, routes, impact, cross-repo."
   homepage "https://github.com/aziron-ai/atlas"
-  version "0.1.27"
+  version "0.1.28"
 
   livecheck do
     skip "Auto-generated on release."
@@ -12,33 +12,42 @@ cask "atlas" do
 
   on_macos do
     on_intel do
-      url "https://github.com/aziron-ai/atlas/releases/download/v0.1.27/atlas_0.1.27_darwin_amd64.tar.gz",
+      url "https://github.com/aziron-ai/atlas/releases/download/v0.1.28/atlas_0.1.28_darwin_amd64.tar.gz",
         verified: "github.com/aziron-ai/atlas/"
-      sha256 "2d7871205072ac422b44d09d3587f56ff4ee96679d077a7c04d45d7ebeb7fafe"
+      sha256 "b187078e7c15cef4c14abb018458b6f2c8a7edf8656dda1ad5c293066bea778c"
     end
     on_arm do
-      url "https://github.com/aziron-ai/atlas/releases/download/v0.1.27/atlas_0.1.27_darwin_arm64.tar.gz",
+      url "https://github.com/aziron-ai/atlas/releases/download/v0.1.28/atlas_0.1.28_darwin_arm64.tar.gz",
         verified: "github.com/aziron-ai/atlas/"
-      sha256 "3eea9787795b359b170d0f0fd534d6f796345360d1a29fbe37ed617b4109e3bb"
+      sha256 "4ac175a71a7735c18111d6a8390bb84a4fee153286ffa41f48f28561e7091f6a"
     end
   end
 
   on_linux do
     on_intel do
-      url "https://github.com/aziron-ai/atlas/releases/download/v0.1.27/atlas_0.1.27_linux_amd64.tar.gz",
+      url "https://github.com/aziron-ai/atlas/releases/download/v0.1.28/atlas_0.1.28_linux_amd64.tar.gz",
         verified: "github.com/aziron-ai/atlas/"
-      sha256 "e130a2e4717843a6325b02985d9c474cb36dc9273da09b8303d7909136be9164"
+      sha256 "baed239f300569ca45d7f233670295dd12d419b7d98697ee9a3e71e44bb4195d"
     end
     on_arm do
-      url "https://github.com/aziron-ai/atlas/releases/download/v0.1.27/atlas_0.1.27_linux_arm64.tar.gz",
+      url "https://github.com/aziron-ai/atlas/releases/download/v0.1.28/atlas_0.1.28_linux_arm64.tar.gz",
         verified: "github.com/aziron-ai/atlas/"
-      sha256 "d63be784212ed2c7cae66a78753e7ac048b701f7350cbe915371f26ddce6ced1"
+      sha256 "606880abd3208ceacd1114f573070ebc89aa03eefba61cdccf1a30b620594d57"
     end
   end
 
   postflight do
     if OS.mac?
       system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/atlas"]
+    end
+    # Auto-provision the atlas skill + MCP config for every assistant on this
+    # machine (Claude desktop+CLI, Codex, Copilot, Cursor, Gemini). Runs as the
+    # installing user with HOME available; best-effort so a provisioning hiccup
+    # never fails the cask install.
+    begin
+      system_command "#{staged_path}/atlas", args: ["bootstrap"]
+    rescue
+      # ignore: `atlas bootstrap` (or first-run) can be run manually later
     end
   end
 
