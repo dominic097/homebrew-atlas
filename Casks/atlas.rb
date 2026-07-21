@@ -2,7 +2,7 @@
 cask "atlas" do
   desc "Atlas deterministic code intelligence: symbols, calls, routes, impact, cross-repo."
   homepage "https://github.com/aziron-ai/atlas"
-  version "0.1.40"
+  version "0.1.41"
 
   livecheck do
     skip "Auto-generated on release."
@@ -12,27 +12,27 @@ cask "atlas" do
 
   on_macos do
     on_intel do
-      url "https://github.com/aziron-ai/atlas/releases/download/v0.1.40/atlas_0.1.40_darwin_amd64.tar.gz",
+      url "https://github.com/aziron-ai/atlas/releases/download/v0.1.41/atlas_0.1.41_darwin_amd64.tar.gz",
         verified: "github.com/aziron-ai/atlas/"
-      sha256 "a6aae0376e85df53f9c12f8ddcc68b4e9b53251fac7007d15d2090930c83e631"
+      sha256 "7305ce2658f908431d03800cb20d3a18d83443410c3a1c763f1300b70b7fedfe"
     end
     on_arm do
-      url "https://github.com/aziron-ai/atlas/releases/download/v0.1.40/atlas_0.1.40_darwin_arm64.tar.gz",
+      url "https://github.com/aziron-ai/atlas/releases/download/v0.1.41/atlas_0.1.41_darwin_arm64.tar.gz",
         verified: "github.com/aziron-ai/atlas/"
-      sha256 "e32abb9bc3f8f3243c5c6d40cd738803eb17c7657d812be12602f2546371c21b"
+      sha256 "82e15897ad0db6077fc9521df1d79261f90bb4a91978fcfeb4a6e2c93aeaaf46"
     end
   end
 
   on_linux do
     on_intel do
-      url "https://github.com/aziron-ai/atlas/releases/download/v0.1.40/atlas_0.1.40_linux_amd64.tar.gz",
+      url "https://github.com/aziron-ai/atlas/releases/download/v0.1.41/atlas_0.1.41_linux_amd64.tar.gz",
         verified: "github.com/aziron-ai/atlas/"
-      sha256 "b95ea81248b6e70c0c845deeaf26f17f8516c25204a9c853c16df149b27fdb52"
+      sha256 "dafd9e73cbec024d5b77f18295ab5c3ab3eb93c6584016d2b701cb301b95f43d"
     end
     on_arm do
-      url "https://github.com/aziron-ai/atlas/releases/download/v0.1.40/atlas_0.1.40_linux_arm64.tar.gz",
+      url "https://github.com/aziron-ai/atlas/releases/download/v0.1.41/atlas_0.1.41_linux_arm64.tar.gz",
         verified: "github.com/aziron-ai/atlas/"
-      sha256 "352340bdffd390a569a123446f871ceacb7178fadd1c509d6060481e1620653e"
+      sha256 "748c1aa73fd97e48f92e8dfab74abe94440ccde0189019f5f831992fc5ecf921"
     end
   end
 
@@ -43,11 +43,24 @@ cask "atlas" do
     # Auto-provision the atlas skill + MCP config for every assistant on this
     # machine (Claude desktop+CLI, Codex, Copilot, Cursor, Gemini). Runs as the
     # installing user with HOME available; best-effort so a provisioning hiccup
-    # never fails the cask install.
+    # never fails the cask install — but NEVER silent (issue #8): a skipped
+    # bootstrap leaves every assistant config pointing at the previous
+    # (deleted) Caskroom version dir, and the assistants fail to spawn Atlas
+    # with no user-visible error. The binary itself resolves the stable
+    # <prefix>/bin launcher PATH-independently since v0.1.41, so this hook
+    # succeeding is what heals configs written by older versions; on failure
+    # we retry via the stable launcher, then tell the user exactly what to run.
     begin
       system_command "#{staged_path}/atlas", args: ["bootstrap"]
-    rescue
-      # ignore: `atlas bootstrap` (or first-run) can be run manually later
+    rescue => e
+      begin
+        system_command "#{HOMEBREW_PREFIX}/bin/atlas", args: ["bootstrap"]
+      rescue
+        opoo "atlas bootstrap could not auto-register the MCP configs (#{e}). " \
+             "Assistant registrations may still point at the previous version — " \
+             "run `atlas bootstrap` once to repoint them at the stable launcher; " \
+             "`atlas doctor` shows which registrations are stale."
+      end
     end
   end
 
